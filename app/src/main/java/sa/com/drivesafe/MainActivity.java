@@ -8,6 +8,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -24,7 +25,6 @@ public class MainActivity extends Activity {
         LocationListener locationListener = new LocationListener(){
             double prevLat = 0, prevLong = 0, prevTime = 0, timer = 0;
             public void onLocationChanged(Location loc){
-                System.out.println("HERE");
                 double param1 = loc.getLatitude() - prevLat;
                 double param2 = loc.getLongitude() - prevLong;
                 timer = System.currentTimeMillis() - prevTime;
@@ -32,9 +32,7 @@ public class MainActivity extends Activity {
                 prevLat = loc.getLatitude();
                 prevLong = loc.getLongitude();
                 prevTime = System.currentTimeMillis();
-                loc.getLatitude();
-                System.out.println(loc.getSpeed());
-                Toast.makeText(MainActivity.this, "Current speed: " + loc.getSpeed(), Toast.LENGTH_SHORT).show();
+
             }
             public void onStatusChanged(String provider, int status, Bundle extras) { }
             public void onProviderEnabled(String provider) { }
@@ -67,6 +65,10 @@ public class MainActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onCheckBoxClicked(View view){
+
     }
 
     @Override
