@@ -40,5 +40,6 @@ public class SmsReceiver extends BroadcastReceiver {
 
     public void setCheckBoxChecked(Boolean checked){
         checkBoxChecked = checked;
+
     }
 }
