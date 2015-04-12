@@ -12,7 +12,7 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="Speed"
+        android:text="Speed Threshold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView"
@@ -38,6 +38,7 @@
         android:layout_height="wrap_content"
         android:text="Text Back Enabled"
         android:id="@+id/checkBox"
+        android:onClick="onCheckBoxClicked"
         android:layout_centerVertical="true"
         android:layout_alignRight="@+id/textView"
         android:layout_alignEnd="@+id/textView"
