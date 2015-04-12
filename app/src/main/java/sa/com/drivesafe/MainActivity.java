@@ -1,19 +1,40 @@
 package sa.com.drivesafe;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.app.Activity;
+import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.widget.Toast;
 
-
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
 
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.activity_main);
+
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+        LocationListener locationListener = new LocationListener(){
+            public void onLocationChanged(Location loc){
+                loc.getLatitude();
+                System.out.println(loc.getSpeed());
+                Toast.makeText(MainActivity.this, "Current speed:" + loc.getSpeed(), Toast.LENGTH_SHORT).show();
+            }
+            public void onStatusChanged(String provider, int status, Bundle extras) { }
+            public void onProviderEnabled(String provider) { }
+            public void onProviderDisabled(String provider) { }
+
+        };
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -36,4 +57,5 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
