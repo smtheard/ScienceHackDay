@@ -1,11 +1,16 @@
 package sa.com.drivesafe;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.telephony.SmsMessage;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,15 +20,43 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
     LocationManager locationManager;
     LocationListener locationListener;
-    SmsReceiver smsReceiver;
+    Boolean checkBoxChecked = false;
+    BroadcastReceiver smsReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        smsReceiver = new SmsReceiver();
+        //IntentFilter intentFilter = new IntentFilter("android.intent.action.MAIN");
+        IntentFilter intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+        smsReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                System.out.println("in on receive at top");
+                Bundle bundle = intent.getExtras();
+                SmsMessage[] msgs = null;
+                String messageReceived = "";
+                if (bundle != null) {
+                    //---retrieve the SMS message received---
+                    Object[] pdus = (Object[]) bundle.get("pdus");
+                    msgs = new SmsMessage[pdus.length];
+                    for (int i = 0; i < msgs.length; i++) {
+                        msgs[i] = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                        messageReceived += msgs[i].getMessageBody().toString();
+                        messageReceived += "\n";
+                    }
+                    // Get the Sender Phone Number
+                    String senderPhoneNumber = msgs[0].getOriginatingAddress();
+                    SmsManager smsManager = SmsManager.getDefault();
+                    System.out.println("above send text back ");
+                    smsManager.sendTextMessage(senderPhoneNumber, null, "I am currently driving..", null, null);
+                }
+            }
+        };
+        this.registerReceiver(smsReceiver, intentFilter);
         startLocationTracking();
-    }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -50,11 +83,11 @@ public class MainActivity extends Activity {
     public void onCheckBoxClicked(View view){
         boolean checked = ((CheckBox) view).isChecked();
         if(view.getId() == R.id.checkBox && checked) {
-            smsReceiver.setCheckBoxChecked(true);
+            checkBoxChecked = true;
             startLocationTracking();
         }
         else {
-            smsReceiver.setCheckBoxChecked(false);
+            checkBoxChecked = false;
             stopLocationTracking();
         }
     }
