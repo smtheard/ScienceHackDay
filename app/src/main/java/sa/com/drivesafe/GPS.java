@@ -13,7 +13,7 @@ import android.widget.Toast;
  */
 public class GPS {
     GPS() {
-
+//
     }
     private void test(Activity test) {
         LocationManager locationManager = (LocationManager) test.getSystemService(Context.LOCATION_SERVICE);
