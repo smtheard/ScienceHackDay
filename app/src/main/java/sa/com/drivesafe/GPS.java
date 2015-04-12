@@ -12,6 +12,7 @@ import android.widget.Toast;
  * Created by USER on 4/12/2015.
  */
 public class GPS {
+    Context context;
     private LocationManager locationManager;
     private LocationListener locationListener;
 
@@ -22,7 +23,7 @@ public class GPS {
             @Override
             public void onLocationChanged(Location location) {
                 if(location.getSpeed()>0) {
-                    Toast.makeText(locManager.getApplicationContext(),"yrdy",Toast.LENGTH_LONG);
+                    Toast.makeText(locManager.getApplicationContext(),"yrdy",Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -41,6 +42,8 @@ public class GPS {
 
             }
         };
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
     }
 
 }
