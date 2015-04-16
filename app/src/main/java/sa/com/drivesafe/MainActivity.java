@@ -28,7 +28,6 @@ public class MainActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //IntentFilter intentFilter = new IntentFilter("android.intent.action.MAIN");
         IntentFilter intentFilter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
         smsReceiver = new BroadcastReceiver() {
             @Override
@@ -38,7 +37,7 @@ public class MainActivity extends Activity {
                 SmsMessage[] msgs = null;
                 String messageReceived = "";
                 if (bundle != null) {
-                    //---retrieve the SMS message received---
+                    //retrieve the SMS message received
                     Object[] pdus = (Object[]) bundle.get("pdus");
                     msgs = new SmsMessage[pdus.length];
                     for (int i = 0; i < msgs.length; i++) {
@@ -46,17 +45,16 @@ public class MainActivity extends Activity {
                         messageReceived += msgs[i].getMessageBody().toString();
                         messageReceived += "\n";
                     }
-                    // Get the Sender Phone Number
+                    //Get sender phone number
                     String senderPhoneNumber = msgs[0].getOriginatingAddress();
                     SmsManager smsManager = SmsManager.getDefault();
-                    System.out.println("above send text back ");
                     smsManager.sendTextMessage(senderPhoneNumber, null, "I am currently driving..", null, null);
                 }
             }
         };
         this.registerReceiver(smsReceiver, intentFilter);
         startLocationTracking();
-    };
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -108,15 +106,14 @@ public class MainActivity extends Activity {
                 double param2 = loc.getLongitude() - prevLong;
                 timer = System.currentTimeMillis() - prevTime;
                 loc.setSpeed((float) ((Math.sqrt((param1 * param1) + (param2 * param2)) / timer)));
-                //loc.setSpeed(15);
+                //loc.setSpeed(15); (use to emulate movement for testing)
                 prevLat = loc.getLatitude();
                 prevLong = loc.getLongitude();
                 prevTime = System.currentTimeMillis();
                 Toast.makeText(MainActivity.this, "Speed: " + loc.getSpeed(), Toast.LENGTH_SHORT).show();
-                //insert of speed is greater than selected speed from the UI,
-                //and an SMS is received, send an SMS back.
-                //if(loc.getSpeed() > thresholdSpeed)
-
+                //TODO: insert of speed is greater than selected speed from the UI,
+                //TODO: and an SMS is received, send an SMS back.
+                //TODO: if(loc.getSpeed() > thresholdSpeed)
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {}
